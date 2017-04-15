@@ -6,9 +6,10 @@ var jsonParser = require('json-parser');
 var Promise = require('promise');
 
 /* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
+router.get('/', function(req, res, next) {
+  // res.render('index', { title: 'Express' });
+    res.send('Hello World');
+});
 
 router.patch('/status', function (req, res, next) {
     updateUserStatus(req.body.userID, function (err, rows) {

@@ -1,7 +1,7 @@
 /**
  * Created by liadberko on 30/03/2017.
  */
-
+var mysql = require('mysql');
 /**
  * Mysql Connection
  * Method does not handle errors

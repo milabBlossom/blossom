@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var jsonParser = require('json-parser');
 // var dbAgent = require('./public/javasctipts/dbAgent');
 var Promise = require('promise');
+var mysql = require('mysql');
 
 
 function calcFlowerStatus(targetUserID, flowerID) {

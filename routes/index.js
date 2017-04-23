@@ -9,8 +9,10 @@ var mysql = require('mysql');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   // res.render('index', { title: 'Express' });
-    res.status(200);
-    res.send('Hello World');
+  //   res.status(200);
+    console.log('got a get request:\n');
+    var test = [0, 1, 2, 3, 4, 5, 6];
+    res.send(test);
 });
 
 router.patch('/status', function (req, res, next) {

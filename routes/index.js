@@ -12,7 +12,10 @@ router.get('/', function(req, res, next) {
   //   res.status(200);
     console.log('got a get request:\n');
     var test = [0, 1, 2, 3, 4, 5, 6];
-    res.send(test);
+    res.json({
+        userID:123456,
+        flowerValue: 5
+    });
 });
 
 router.patch('/status', function (req, res, next) {

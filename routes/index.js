@@ -18,6 +18,19 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.post('/', function (req, res, next) {
+   var userID = req.body.user_id;
+   var familyID = req.body.family_id;
+   res.status(200);
+   res.json({
+       response: 'I got a post request',
+       params: {
+           userID:userID,
+           familyID:familyID
+       }
+   })
+});
+
 router.patch('/status', function (req, res, next) {
     updateUserStatus(req.body.userID,req.body.familyMemberID,  function (err) {
         if(err){

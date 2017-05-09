@@ -11,6 +11,17 @@ var Promise = require('promise');
 var mysql = require('mysql');
 
 
+router.get('/', function(req, res, next) {
+    // res.render('index', { title: 'Express' });
+    res.status(200);
+    console.log('got a get request:\n');
+    var test = [0, 1, 2, 3, 4, 5, 6];
+    res.json({
+        userID:123456,
+        flowerValue: 5
+    });
+});
+
 function calcFlowerStatus(targetUserID, flowerID) {
     return new Promise(function (resolve, reject) {
        if(true){//TODO:add validateNumInput parameters function to if condition

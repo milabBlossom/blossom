@@ -26,11 +26,7 @@ router.post('/', function (req, res, next) {
    console.log(familyID);
    res.status(200);
    res.json({
-       response: 'I got a post request',
-       params: {
-           userID:userID,
-           familyID:familyID
-       }
+       contact: 0544589610
    })
 });
 

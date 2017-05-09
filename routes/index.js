@@ -21,6 +21,9 @@ router.get('/', function(req, res, next) {
 router.post('/', function (req, res, next) {
    var userID = req.body.user_id;
    var familyID = req.body.family_id;
+   console.log('I got a post request');
+   console.log(userID);
+   console.log(familyID);
    res.status(200);
    res.json({
        response: 'I got a post request',

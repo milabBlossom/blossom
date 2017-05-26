@@ -26,9 +26,7 @@ module.exports.updateUserStatus = function (userID, familyMemberID, status) {
 
 module.exports.getAvailableUser = function (family_id, user_id) {
     return new Promise(function (resolve, reject) {
-        console.log('popo');//debug liad
         dbAgent.getAvailableUsers(family_id, user_id).then(function (result, err) {
-            console.log('popopo');//debug liad
             console.log('utils.getAvailableUser.dbAgent.getAvailableUsers result is: ' + result);//debug liad
             if (err) {
                 reject(err);
@@ -50,7 +48,7 @@ module.exports.setUserTimer = function (family_id, user_id) {
     };
 
     usersStatusQueue.push(user);
-    setTimeout(setUserUnavailable, (1000 /* * 60 */ * 10), user_id, family_id);
+    setTimeout(setUserUnavailable, (1000 * 60 * 10), user_id, family_id);
 };
 
 function setUserUnavailable(user_id, family_id) {

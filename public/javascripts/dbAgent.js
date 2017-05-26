@@ -26,7 +26,6 @@ module.exports.createDBConnection = function () {
 
 module.exports.getAvailableUsers = function (family_id, user_id) {
     return new Promise(function (resolve, reject) {
-        console.log('popo1');//debug liad
         var query = 'SELECT USER_NAME,USER_PHONE_NUMBER FROM USER_SETTINGS WHERE FAMILY_ID=? AND NOT USER_ID=? AND USER_STATUS=true';
         var dbConnection = dbAgent.createDBConnection();
 

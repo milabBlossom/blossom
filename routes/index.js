@@ -1,13 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require('body-parser');
-var jsonParser = require('json-parser');
 var dbAgent = require('../public/javascripts/dbAgent');
-var Promise = require('promise');
-var mysql = require('mysql');
 var utils = require('../public/javascripts/utils');
 
-/* GET home page. */
+/* GET service health check */
 router.get('/', function(req, res, next) {//FOR DEBUGGING
     console.log('got a get request:\n');
     var db = dbAgent.createDBConnection();
@@ -15,11 +11,11 @@ router.get('/', function(req, res, next) {//FOR DEBUGGING
     return db.query(query, function (err, rows) {
         db.end();
         if(err){
-            return 0;
+            res.status(500).json({service_health: "DOWN"});
         } else if(!rows) {
             return -1;
         } else {
-            res.status(200).json(rows);
+            res.status(200).json({service_health: "UP"});
         }
     });
 });
@@ -38,7 +34,6 @@ router.post('/', function (req, res, next) {
             res.json({err: 'Error updating user status in DB'});
         } else {
             utils.setUserTimer(familyID, userID);//TODO:add callback for error indication
-            console.log('po');//debug liad
             utils.getAvailableUser(familyID, userID).then(function (result) {
                 console.log('==> result is: ' + result);//debug liad
                 if(!result){

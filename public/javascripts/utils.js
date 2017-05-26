@@ -35,7 +35,7 @@ module.exports.getAvailableUser = function (family_id, user_id) {
             } else  if (!result){
                 resolve(0);//no results
             } else {
-                console.log('SUCCESS!! utils.getAvailableUser.dbAgent.getAvailableUsers result is: ' + result);//debug liad
+                console.log('SUCCESS!!');//debug liad
                 var randomNumber = Math.floor(Math.random() * result.length);
                 resolve (result[randomNumber]);
             }
@@ -50,7 +50,7 @@ module.exports.setUserTimer = function (family_id, user_id) {
     };
 
     usersStatusQueue.push(user);
-    setTimeout(setUserUnavailable, (1000 * 60 * 10), user_id, family_id);
+    setTimeout(setUserUnavailable, (1000 /* * 60 */ * 10), user_id, family_id);
 };
 
 function setUserUnavailable(user_id, family_id) {

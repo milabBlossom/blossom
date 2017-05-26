@@ -37,7 +37,7 @@ router.post('/', function (req, res, next) {
             res.status(500);
             res.json({err: 'Error updating user status in DB'});
         } else {
-            // utils.setUserTimer(familyID, userID);//TODO:add callback for error indication
+            utils.setUserTimer(familyID, userID);//TODO:add callback for error indication
             console.log('po');//debug liad
             utils.getAvailableUser(familyID, userID).then(function (result) {
                 console.log('==> result is: ' + result);//debug liad

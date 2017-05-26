@@ -6,13 +6,12 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var jsonParser = require('json-parser');
-// var dbAgent = require('./public/javasctipts/dbAgent');
+var dbAgent = require('../public/javascripts/dbAgent');
 var Promise = require('promise');
 var mysql = require('mysql');
 
 
 router.get('/', function(req, res, next) {
-    // res.render('index', { title: 'Express' });
     res.status(200);
     console.log('got a get request:\n');
     var test = [0, 1, 2, 3, 4, 5, 6];
@@ -27,7 +26,7 @@ function calcFlowerStatus(targetUserID, flowerID) {
        if(true){//TODO:add validateNumInput parameters function to if condition
 
            var query = "SELECT * FROM CALLS_HYSTORY WHERE USER_ID=? AND FAMILY_MEMBER_ID=?";
-           var dbConnection = createDBConnection();
+           var dbConnection = dbAgent.createDBConnection();
 
            dbConnection.query(query, [targetUserID, flowerID], function (err, rows, fields) {
                if(err){
@@ -52,17 +51,4 @@ function calcFlowerStatus(targetUserID, flowerID) {
 
 function DBDataToArray(rows) {
 //TODO:implement
-}
-
-function createDBConnection() {
-    var connection = mysql.createConnection({
-        host: 'sql11.freemysqlhosting.net',
-        user: 'sql11169126',
-        password: 'nZCxGZ16u1',
-        database: 'sql11169126',
-        multipleStatements: true
-    });
-
-    connection.connect();
-    return connection;
 }

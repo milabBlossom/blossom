@@ -2,19 +2,25 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var jsonParser = require('json-parser');
-// var dbAgent = require('./public/javasctipts/dbAgent');
+var dbAgent = require('../public/javascripts/dbAgent');
 var Promise = require('promise');
 var mysql = require('mysql');
+var utils = require('../public/javascripts/utils');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  // res.render('index', { title: 'Express' });
-  //   res.status(200);
+router.get('/', function(req, res, next) {//FOR DEBUGGING
     console.log('got a get request:\n');
-    var test = [0, 1, 2, 3, 4, 5, 6];
-    res.json({
-        userID:123456,
-        flowerValue: 5
+    var db = dbAgent.createDBConnection();
+    var query = "SELECT * FROM USER_SETTINGS;";
+    return db.query(query, function (err, rows) {
+        db.end();
+        if(err){
+            return 0;
+        } else if(!rows) {
+            return -1;
+        } else {
+            res.status(200).json(rows);
+        }
     });
 });
 
@@ -24,71 +30,94 @@ router.post('/', function (req, res, next) {
    console.log('I got a post request');
    console.log(userID);
    console.log(familyID);
-   res.status(200);
-   res.json({
-       contact: "0544589610"
-   })
-});
 
-router.patch('/status', function (req, res, next) {
-    updateUserStatus(req.body.userID,req.body.familyMemberID,  function (err) {
-        if(err){
-          res.status(500);
-          res.json({err: 'Error writing to DB'});
+    utils.updateUserStatus(userID,familyID, true).then(function (response) {
+        console.log('==> response is: ' + response);//debug liad
+        if(!response){
+            res.status(500);
+            res.json({err: 'Error updating user status in DB'});
         } else {
-            //TODO:return all available family members if update is for 'available' status
-          res.status(204);
+            // utils.setUserTimer(familyID, userID);//TODO:add callback for error indication
+            console.log('po');//debug liad
+            utils.getAvailableUser(familyID, userID).then(function (result) {
+                console.log('==> result is: ' + result);//debug liad
+                if(!result){
+                    console.log('ERROR!! at index.post root : ' + result);//debug liad
+                    res.status(404)
+                        .json({
+                            contact_name: 'No results',
+                            contact_phone_number: 'No results'
+                        });
+                } else {
+                    res.status(200).json({
+                        contact_name: result.USER_NAME,
+                        contact_phone_number: result.USER_PHONE_NUMBER
+                    });
+                }
+            }).catch(function (err) {
+                console.log('Error getting available user: ' + err);
+            })
         }
     });
 });
 
-router.get('/status/:userID/:familyMemberID', function (req, res, next) {
-    getUsersStatus(req.params.userID, req.params.familyMemberID, function (val) {
-       if(!val){
-           console.log("Get user status handler(error): " + req.params.id);//liad debug
-         res.status(500);
-         res.json({err: 'error fetching data from DB'});
-       } else if(val === -1) {
-            res.status(404);
-            res.json({Error: "User not found, please validate ID"});
-       } else {
-           console.log("Get user status handler(success): " + req.params.id);//liad debug
-         res.status(200);
-         res.json({Value:val});
-       }
-    });
-});
+// router.patch('/status', function (req, res, next) {
+//     utils.updateUserStatus(req.body.userID,req.body.familyMemberID,  function (err) {
+//         if(err){
+//           res.status(500);
+//           res.json({err: 'Error writing to DB'});
+//         } else {
+//             //TODO:return all available family members if update is for 'available' status
+//           res.status(204);
+//         }
+//     });
+// });
 
-function updateUserStatus(userID, familyMemberID) {
-    //TODO:use flower.js functions to calculate new status
-};
+// router.get('/status/:userID/:familyMemberID', function (req, res, next) {
+//     getUsersStatus(req.params.userID, req.params.familyMemberID, function (val) {
+//        if(!val){
+//            console.log("Get user status handler(error): " + req.params.id);//liad debug
+//          res.status(500);
+//          res.json({err: 'error fetching data from DB'});
+//        } else if(val === -1) {
+//             res.status(404);
+//             res.json({Error: "User not found, please validate ID"});
+//        } else {
+//            console.log("Get user status handler(success): " + req.params.id);//liad debug
+//          res.status(200);
+//          res.json({Value:val});
+//        }
+//     });
+// });
+//
+//
+//
+// function getUsersStatus (userID, familyMemberID) {
+//     var db = dbAgent.createDBConnection();
+//     var query = "SELECT * FROM CONNECTION_HISTORY WHERE user_id=? and family_member_id=?;";
+//     return db.query(query, [userID, familyMemberID], function (err, rows) {
+//         db.end();
+//         if(err){
+//             return 0;
+//         } else if(!rows) {
+//             return -1;
+//         } else {
+//             return rows[0];
+//         }
+//     });
+// };
 
-function getUsersStatus (userID, familyMemberID) {
-    //TODO:implement
-    var db = createDBConnection();
-    var query = "SELECT * FROM CONNECTION_HISTORY WHERE user_id=? and family_member_id=?;";
-    return db.query(query, [userID, familyMemberID], function (err, rows) {
-        if(err){
-            return 0;
-        } else if(!rows) {
-            return -1;
-        } else {
-            return rows[0];
-        }
-    });
-};
-
-function createDBConnection() {
-    var connection = mysql.createConnection({
-        host: 'sql11.freemysqlhosting.net',
-        user: 'sql11169126',
-        password: 'nZCxGZ16u1',
-        database: 'sql11169126',
-        multipleStatements: true
-    });
-
-    connection.connect();
-    return connection;
-}
+// function createDBConnection() {
+//     var connection = mysql.createConnection({
+//         host: 'sql11.freemysqlhosting.net',
+//         user: 'sql11169126',
+//         password: 'nZCxGZ16u1',
+//         database: 'sql11169126',
+//         multipleStatements: true
+//     });
+//
+//     connection.connect();
+//     return connection;
+// }
 
 module.exports = router;

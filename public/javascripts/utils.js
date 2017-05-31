@@ -37,6 +37,9 @@ module.exports.getAvailableUser = function (family_id, user_id) {
                 var randomNumber = Math.floor(Math.random() * result.length);
                 resolve (result[randomNumber]);
             }
+        }).catch(function (rejectedRes) {
+            console.log("Error getting available user: " + rejectedRes);
+            reject(rejectedRes);
         });
     });
 };
@@ -49,6 +52,22 @@ module.exports.setUserTimer = function (family_id, user_id) {
 
     usersStatusQueue.push(user);
     setTimeout(setUserUnavailable, (1000 * 60 * 10), user_id, family_id);
+};
+
+module.exports.calcRelationshipRank = function (familyId, userID, familyMemberId, date) {
+    return new Promise(function (resolve, reject) {
+            console.log('====> HELLO');//debug liad
+        dbAgent.getRelationshipStatus(familyId, userID, familyMemberId).then(function (relationshipResult) {
+            console.log('====> HELLO2');//debug liad
+            var lastCallDate = relationshipResult.LAST_CALL;
+            var currentRank = relationshipResult.RELATIONSHIP_RANK;
+
+            resolve(1);//temp value
+            //TODO:continue implementation
+        }).catch(function (err) {
+
+        });
+    })
 };
 
 function setUserUnavailable(user_id, family_id) {

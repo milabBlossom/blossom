@@ -33,7 +33,7 @@ module.exports.getAvailableUsers = function (family_id, user_id) {
             if (err) {
                 console.log('ERROR!!! DB response is ' + rows);//debug
                 console.log(err.message);
-                resolve (0);
+                reject (err);
             } else {
                 dbConnection.end();
                 console.log('SUCCESS!!! DB response is ' + rows);//debug
@@ -41,4 +41,34 @@ module.exports.getAvailableUsers = function (family_id, user_id) {
             }
         });
     });
+};
+
+module.exports.updateRelationshipStatus = function (familyId, userID, familyMemberId, date, callLength, rank) {
+    return new Promise(function (resolve, reject) {
+        var query = 'UPDATE CALLS_HISTROY SET LAST_CALL=?,LAST_CALL_LENGTH=9 WHERE (USER_ID=? AND FAMILY_MEMBER_ID=?) OR (FAMILY_MEMBER_ID=? AND USER_ID=?);';
+        var dbConnection = dbAgent.createDBConnection();
+        console.log('userId2 is: ' + userID);//debug liad
+        console.log('familyMemberId2 is: ' + familyMemberId);//debug liad
+        date = 10;//debug liad
+
+        dbConnection.query(query, [date, userID, familyMemberId, familyMemberId, userID], function (err) {
+            if (err) {
+                console.log('ERROR!!! DB response is ' + err.message);//debug
+                reject (err);
+            } else {
+                dbConnection.end();
+                console.log('SUCCESS updating calls history!!!');//debug
+                resolve (true);
+            }
+        });
+    });
+};
+
+module.exports.getRelationshipStatus = function (familyId, userId, familyMemberId) {
+    console.log('====> HELLO1');//debug liad
+    return new Promise(function (resolve, reject) {
+
+    resolve(true);
+    });
+    //TODO:implement
 };

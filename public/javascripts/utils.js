@@ -27,7 +27,7 @@ module.exports.updateUserStatus = function (userID, familyMemberID, status) {
 module.exports.getAvailableUser = function (family_id, user_id) {
     return new Promise(function (resolve, reject) {
         dbAgent.getAvailableUsers(family_id, user_id).then(function (result, err) {
-            console.log('utils.getAvailableUser.dbAgent.getAvailableUsers result is: ' + result);//debug liad
+            console.log('utils.getAvailableUser.dbAgent.getAvailableUsers result is: ' + JSON.stringify(result));//debug liad
             if (err) {
                 reject(err);
             } else  if (!result){

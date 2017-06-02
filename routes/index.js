@@ -33,7 +33,7 @@ router.post('/', function (req, res, next) {
         } else {
             utils.setUserTimer(familyID, userID);
             utils.getAvailableUser(familyID, userID).then(function (result) {
-                console.log('==> result is: ' + result);//debug liad
+                console.log('==> result is: ' + JSON.stringify(result));//debug liad
                 if(!result){
                     console.log('ERROR!! at index.post root : ' + result);//debug liad
                     res.status(404)

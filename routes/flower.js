@@ -12,13 +12,15 @@ var mysql = require('mysql');
 
 
 router.get('/', function(req, res, next) {
-    res.status(200);
-    console.log('got a get request:\n');
-    var test = [0, 1, 2, 3, 4, 5, 6];
-    res.json({
-        userID:123456,
-        flowerValue: 5
-    });
+    // var val = req.query.value;
+    // var url = 'http://blynk-cloud.com/14f620c6c7ac472e82f44bba939e5789/update/V0?value=' + val;
+    //
+    // request
+    //     .get(url)
+    //     .on('response', function(response) {
+    //         console.log(response.statusCode);
+    //         console.log(response.headers);
+    //     })
 });
 
 function calcFlowerStatus(targetUserID, flowerID) {

@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var dbAgent = require('../public/javascripts/dbAgent');
 var utils = require('../public/javascripts/utils');
+var request = require('request');
+
 
 /* GET service health check */
 router.get('/', function(req, res, next) {//FOR DEBUGGING
@@ -10,12 +12,36 @@ router.get('/', function(req, res, next) {//FOR DEBUGGING
     var query = "SELECT * FROM USER_SETTINGS;";
     return db.query(query, function (err, rows) {
         db.end();
-        if(err){
+        if(err || !rows){
             res.status(500).json({service_health: "DOWN"});
         } else {
             res.status(200).json({service_health: "UP"});
         }
     });
+});
+
+router.get('/flower', function (req, res, next) {
+    var val = req.query.value;
+    var url = 'http://blynk-cloud.com/14f620c6c7ac472e82f44bba939e5789/update/V0?value=' + val;
+    request
+        .get(url)
+        .on('response', function(response) {
+            console.log(response.statusCode);
+            console.log(response.headers);
+            res.status(200)
+                .json({
+                   blynk_request_status: response.statusCode,
+                    val_sent_to_blynk: val
+                });
+        })
+        .on('error', function (error) {
+            res.status(500)
+                .json({
+                    blynk_request_status: response.statusCode,
+                    val_sent_to_blynk: val,
+                    error: error
+                });
+        });
 });
 
 router.post('/', function (req, res, next) {
@@ -73,10 +99,6 @@ router.put('/', function (req, res, next) {
         console.log('Po2');//debug liad
         dbAgent.updateRelationshipStatus(familyId, userID, familyMemberId, date, callLength, rank);
         res.status(204).send();
-            // .json({
-            //     status_code: 205,
-            //     request_status: "Recieved Update Request"
-            // });
     }).catch(function (err) {
         console.log('Po3');//debug liad
         console.log("Error updating calls history at router");

@@ -105,6 +105,6 @@ module.exports.updateFlowerState = function (val) {
 };
 
 module.exports.calcFlowerState = function (rank) {
-  var flowerStateArray = [];
+  var flowerStateArray = [0, 25, 50, 70];
   return flowerStateArray[rank - 1];
 };

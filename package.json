@@ -12,6 +12,7 @@
     "express": "~4.14.1",
     "jade": "~1.11.0",
     "json-parser": "^1.1.5",
+    "mongodb": "^2.2.28",
     "morgan": "~1.7.0",
     "mysql": "^2.13.0",
     "promise": "^7.1.1",

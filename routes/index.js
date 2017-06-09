@@ -22,26 +22,7 @@ router.get('/', function(req, res, next) {//FOR DEBUGGING
 
 router.get('/flower', function (req, res, next) {
     var val = req.query.value;
-    var url = 'http://blynk-cloud.com/14f620c6c7ac472e82f44bba939e5789/update/V0?value=' + val;
-    request
-        .get(url)
-        .on('response', function(response) {
-            console.log(response.statusCode);
-            console.log(response.headers);
-            res.status(200)
-                .json({
-                   blynk_request_status: response.statusCode,
-                    val_sent_to_blynk: val
-                });
-        })
-        .on('error', function (error) {
-            res.status(500)
-                .json({
-                    blynk_request_status: response.statusCode,
-                    val_sent_to_blynk: val,
-                    error: error
-                });
-        });
+    return utils.updateFlowerState(val);
 });
 
 router.post('/', function (req, res, next) {
@@ -83,24 +64,18 @@ router.post('/', function (req, res, next) {
 });
 
 router.put('/', function (req, res, next) {
-    console.log('Po1');//debug liad
-    console.log(req);//debug liad
    var userID = req.body.user_id;
-   console.log('userId is: ' + userID);//debug liad
    var familyMemberId = req.body.family_member_id;
-   console.log('familyMemberId is: ' + familyMemberId);//debug liad
    var familyId = req.body.family_id;
-   console.log('familyId is: ' + familyId);//debug liad
-   var date = Date.now();
-   console.log('date is: ' + date);//debug liad
+   var date = Date().now();
    var callLength = 10;//temporary value until we figure out how to pass call length as variable
 
     utils.calcRelationshipRank(familyId, userID, familyMemberId, date).then(function (rank) {
-        console.log('Po2');//debug liad
         dbAgent.updateRelationshipStatus(familyId, userID, familyMemberId, date, callLength, rank);
+        var flowerState = utils.calcFlowerState(rank);
+        utils.updateFlowerState(flowerState);
         res.status(204).send();
     }).catch(function (err) {
-        console.log('Po3');//debug liad
         console.log("Error updating calls history at router");
         res.status(500)
             .json({

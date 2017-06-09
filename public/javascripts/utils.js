@@ -56,14 +56,16 @@ module.exports.setUserTimer = function (family_id, user_id) {
 
 module.exports.calcRelationshipRank = function (familyId, userID, familyMemberId, date) {
     return new Promise(function (resolve, reject) {
-            console.log('====> HELLO');//debug liad
-        dbAgent.getRelationshipStatus(familyId, userID, familyMemberId).then(function (relationshipResult) {
-            console.log('====> HELLO2');//debug liad
-            var lastCallDate = relationshipResult.LAST_CALL;
+        dbAgent.getRelationshipStatus(familyId, userID, familyMemberId).then(function (err, relationshipResult) {
+            // var lastCallDate = relationshipResult.LAST_CALL;
             var currentRank = relationshipResult.RELATIONSHIP_RANK;
 
-            resolve(1);//temp value
-            //TODO:continue implementation
+            if (currentRank < 4) {
+                resolve(currentRank + 1);
+            } else {
+                resolve(currentRank);
+            }
+            //TODO:continue implementation with last call and date consiferation
         }).catch(function (err) {
 
         });
@@ -78,3 +80,31 @@ function setUserUnavailable(user_id, family_id) {
         }
     }
 }
+
+module.exports.updateFlowerState = function (val) {
+    var url = 'http://blynk-cloud.com/14f620c6c7ac472e82f44bba939e5789/update/V0?value=' + val;
+    request
+        .get(url)
+        .on('response', function(response) {
+            console.log(response.statusCode);
+            console.log(response.headers);
+            res.status(200)
+                .json({
+                    blynk_request_status: response.statusCode,
+                    val_sent_to_blynk: val
+                });
+        })
+        .on('error', function (error) {
+            res.status(500)
+                .json({
+                    blynk_request_status: response.statusCode,
+                    val_sent_to_blynk: val,
+                    error: error
+                });
+        });
+};
+
+module.exports.calcFlowerState = function (rank) {
+  var flowerStateArray = [];
+  return flowerStateArray[rank - 1];
+};

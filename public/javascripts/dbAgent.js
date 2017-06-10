@@ -45,13 +45,13 @@ module.exports.getAvailableUsers = function (family_id, user_id) {
 
 module.exports.updateRelationshipStatus = function (familyId, userID, familyMemberId, date, callLength, rank) {
     return new Promise(function (resolve, reject) {
-        var query = 'UPDATE CALLS_HISTROY SET LAST_CALL=?,LAST_CALL_LENGTH=9 WHERE (USER_ID=? AND FAMILY_MEMBER_ID=?) OR (FAMILY_MEMBER_ID=? AND USER_ID=?);';
+        var query = 'UPDATE CALLS_HISTROY SET LAST_CALL=?,LAST_CALL_LENGTH=9,RELATIONSHIP_RANK=? WHERE (USER_ID=? AND FAMILY_MEMBER_ID=?) OR (FAMILY_MEMBER_ID=? AND USER_ID=?);';
         var dbConnection = dbAgent.createDBConnection();
         console.log('userId2 is: ' + userID);//debug liad
         console.log('familyMemberId2 is: ' + familyMemberId);//debug liad
         date = Date.now();//debug liad
 
-        dbConnection.query(query, [date, userID, familyMemberId, userID, familyMemberId], function (err) {
+        dbConnection.query(query, [date, rank, userID, familyMemberId, userID, familyMemberId], function (err) {
             if (err) {
                 console.log('ERROR!!! DB response is ' + err.message);//debug
                 reject (err);

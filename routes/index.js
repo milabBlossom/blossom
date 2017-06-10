@@ -9,7 +9,7 @@ var request = require('request');
 router.get('/', function(req, res, next) {//FOR DEBUGGING
     console.log('got a get request:\n');
     var db = dbAgent.createDBConnection();
-    var query = "SELECT * FROM USER_SETTINGS;";
+    var query = "SELECT * FROM CALLS_HISTROY;";
     return db.query(query, function (err, rows) {
         db.end();
         if(err || !rows){
@@ -64,14 +64,17 @@ router.post('/', function (req, res, next) {
 });
 
 router.put('/', function (req, res, next) {
+    console.log('got a put request');//debug liad
    var userID = req.body.user_id;
    var familyMemberId = req.body.family_member_id;
    var familyId = req.body.family_id;
-   var date = Date().now();
+   var date = Date.now();
    var callLength = 10;//temporary value until we figure out how to pass call length as variable
 
     utils.calcRelationshipRank(familyId, userID, familyMemberId, date).then(function (rank) {
+        console.log('PO1: ' + rank);//debug liad
         dbAgent.updateRelationshipStatus(familyId, userID, familyMemberId, date, callLength, rank);
+        console.log('PO2');//debug liad
         var flowerState = utils.calcFlowerState(rank);
         utils.updateFlowerState(flowerState);
         res.status(204).send();

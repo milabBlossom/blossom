@@ -1,6 +1,7 @@
 var dbAgent = require('./dbAgent');
 var Promise = require('promise');
 var utils = require('./utils');
+var request = require('request');
 var usersStatusQueue = [];
 
 module.exports.updateUserStatus = function (userID, familyMemberID, status) {
@@ -56,16 +57,16 @@ module.exports.setUserTimer = function (family_id, user_id) {
 
 module.exports.calcRelationshipRank = function (familyId, userID, familyMemberId, date) {
     return new Promise(function (resolve, reject) {
-        dbAgent.getRelationshipStatus(familyId, userID, familyMemberId).then(function (err, relationshipResult) {
+        dbAgent.getRelationshipStatus(familyId, userID, familyMemberId).then(function (currentRank) {
+            console.log('======>> CURRENT RANK IS: ' + currentRank);//debug liad
             // var lastCallDate = relationshipResult.LAST_CALL;
-            var currentRank = relationshipResult.RELATIONSHIP_RANK;
 
             if (currentRank < 4) {
                 resolve(currentRank + 1);
             } else {
                 resolve(currentRank);
             }
-            //TODO:continue implementation with last call and date consiferation
+            //TODO:continue implementation with last call and date
         }).catch(function (err) {
 
         });
@@ -86,25 +87,17 @@ module.exports.updateFlowerState = function (val) {
     request
         .get(url)
         .on('response', function(response) {
-            console.log(response.statusCode);
-            console.log(response.headers);
-            res.status(200)
-                .json({
-                    blynk_request_status: response.statusCode,
-                    val_sent_to_blynk: val
-                });
+            console.log("======>>>>> BLYNK RESPONSE IS: ");//debug liad
+            console.log(response.statusCode);//debug liad
+            console.log(response.headers);//debug liad
         })
         .on('error', function (error) {
-            res.status(500)
-                .json({
-                    blynk_request_status: response.statusCode,
-                    val_sent_to_blynk: val,
-                    error: error
-                });
+            console.log('BLYNK ERROR: ' + error);//debug liad
         });
 };
 
 module.exports.calcFlowerState = function (rank) {
+    console.log('===>>POPO1: ' + rank);//debug liad
   var flowerStateArray = [0, 25, 50, 70];
   return flowerStateArray[rank - 1];
 };

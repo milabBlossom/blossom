@@ -49,9 +49,9 @@ module.exports.updateRelationshipStatus = function (familyId, userID, familyMemb
         var dbConnection = dbAgent.createDBConnection();
         console.log('userId2 is: ' + userID);//debug liad
         console.log('familyMemberId2 is: ' + familyMemberId);//debug liad
-        date = 10;//debug liad
+        // date = 10;//debug liad
 
-        dbConnection.query(query, [date, userID, familyMemberId, familyMemberId, userID], function (err) {
+        dbConnection.query(query, [date, userID, familyMemberId, userID, familyMemberId], function (err) {
             if (err) {
                 console.log('ERROR!!! DB response is ' + err.message);//debug
                 reject (err);
@@ -63,12 +63,24 @@ module.exports.updateRelationshipStatus = function (familyId, userID, familyMemb
         });
     });
 };
-
+//
 module.exports.getRelationshipStatus = function (familyId, userId, familyMemberId) {
-    console.log('====> HELLO1');//debug liad
     return new Promise(function (resolve, reject) {
+    console.log('====> HELLO1');//debug liad
+        var query = 'SELECT * from CALLS_HISTROY WHERE (USER_ID=? AND FAMILY_MEMBER_ID=?) OR (FAMILY_MEMBER_ID=? AND USER_ID=?);';
+        var dbConnection = dbAgent.createDBConnection();
 
-    resolve(true);
+        dbConnection.query(query, [userId, familyMemberId, userId, familyMemberId], function (err, rows) {
+            console.log('===>> rows is: ' + JSON.stringify(rows));//debug liad
+            console.log('===>> rank is: ' + rows[0].RELATIONSHIP_RANK);//debug liad
+            if (err) {
+                console.log('ERROR!!! DB response is ' + err.message);//debug
+                reject (err);
+            } else {
+                dbConnection.end();
+                console.log('SUCCESS updating calls history!!!');//debug
+                resolve (rows[0].RELATIONSHIP_RANK);
+            }
+        });
     });
-    //TODO:implement
 };

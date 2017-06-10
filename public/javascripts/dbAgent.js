@@ -49,7 +49,7 @@ module.exports.updateRelationshipStatus = function (familyId, userID, familyMemb
         var dbConnection = dbAgent.createDBConnection();
         console.log('userId2 is: ' + userID);//debug liad
         console.log('familyMemberId2 is: ' + familyMemberId);//debug liad
-        // date = 10;//debug liad
+        date = Date.now();//debug liad
 
         dbConnection.query(query, [date, userID, familyMemberId, userID, familyMemberId], function (err) {
             if (err) {

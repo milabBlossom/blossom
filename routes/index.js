@@ -9,10 +9,11 @@ var request = require('request');
 router.get('/', function(req, res, next) {//FOR DEBUGGING
     console.log('got a get request:\n');
     var db = dbAgent.createDBConnection();
-    var query = "SELECT * FROM CALLS_HISTROY;";
+    // var query = "SELECT * FROM CALLS_HISTROY;";
+    var query = "UPDATE CALLS_HISTROY SET RELATIONSHIP_RANK=1";
     return db.query(query, function (err, rows) {
         db.end();
-        if(err || !rows){
+        if(err/* || !rows*/){
             res.status(500).json({service_health: "DOWN"});
         } else {
             res.status(200).json({service_health: "UP"});

@@ -83,17 +83,21 @@ function setUserUnavailable(user_id, family_id) {
 }
 
 module.exports.updateFlowerState = function (val) {
-    var url = 'http://blynk-cloud.com/14f620c6c7ac472e82f44bba939e5789/update/V0?value=' + val;
-    request
-        .get(url)
-        .on('response', function(response) {
-            console.log("======>>>>> BLYNK RESPONSE IS: ");//debug liad
-            console.log(response.statusCode);//debug liad
-            console.log(response.headers);//debug liad
-        })
-        .on('error', function (error) {
-            console.log('BLYNK ERROR: ' + error);//debug liad
-        });
+    return new Promise(function (resolve, reject) {
+        var url = 'http://blynk-cloud.com/14f620c6c7ac472e82f44bba939e5789/update/V0?value=' + val;
+        request
+            .get(url)
+            .on('response', function(response) {
+                console.log("======>>>>> BLYNK RESPONSE IS: ");//debug liad
+                console.log(response.statusCode);//debug liad
+                console.log(response.headers);//debug liad
+                resolve(response);
+            })
+            .on('error', function (error) {
+                console.log('BLYNK ERROR: ' + error);//debug liad
+                reject(error);
+            });
+    });
 };
 
 module.exports.calcFlowerState = function (rank) {

@@ -91,8 +91,18 @@ router.put('/', function (req, res, next) {
         dbAgent.updateRelationshipStatus(familyId, userID, familyMemberId, date, callLength, rank);
         console.log('PO2');//debug liad
         var flowerState = utils.calcFlowerState(rank);
-        utils.updateFlowerState(flowerState);
-        res.status(204).send();
+        utils.updateFlowerState(flowerState).then(function (blynk_response) {
+            if (blynk_response.statusCode === 200){
+                res.status(204).send();
+            } else {
+                res.status(500)
+                    .json({
+                        status_code: 500,
+                        message: "Error sending an update to blynk",
+                        error: "Error sending an update to blynk"
+                    });
+            }
+        });
     }).catch(function (err) {
         console.log("Error updating calls history at router");
         res.status(500)

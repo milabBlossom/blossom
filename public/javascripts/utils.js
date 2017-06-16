@@ -52,7 +52,7 @@ module.exports.setUserTimer = function (family_id, user_id) {
     };
 
     usersStatusQueue.push(user);
-    setTimeout(setUserUnavailable, (1000 * 60 * 10), user_id, family_id);
+    setTimeout(setUserUnavailable, (1000 * 30 * 10), user_id, family_id);
 };
 
 module.exports.calcRelationshipRank = function (familyId, userID, familyMemberId, date) {

@@ -99,7 +99,7 @@ router.put('/', function (req, res, next) {
                     .json({
                         status_code: 500,
                         message: "Error sending an update to blynk",
-                        error: "Error sending an update to blynk"
+                        error: "Blynk response status code is " + blynk_response.statusCode
                     });
             }
         });

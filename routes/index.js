@@ -6,17 +6,31 @@ var request = require('request');
 
 
 /* GET service health check */
-router.get('/', function(req, res, next) {//FOR DEBUGGING
+router.get('/reset', function(req, res, next) {//FOR DEBUGGING
     console.log('got a get request:\n');
     var db = dbAgent.createDBConnection();
     // var query = "SELECT * FROM CALLS_HISTROY;";
-    var query = "UPDATE CALLS_HISTROY SET RELATIONSHIP_RANK=1";
+    var query = "UPDATE CALLS_HISTROY SET RELATIONSHIP_RANK=1;";
     return db.query(query, function (err, rows) {
         db.end();
         if(err/* || !rows*/){
             res.status(500).json({service_health: "DOWN"});
         } else {
             res.status(200).json({service_health: "UP"});
+        }
+    });
+});
+
+router.get('/', function(req, res, next) {//FOR DEBUGGING
+    console.log('got a get request:\n');
+    var db = dbAgent.createDBConnection();
+    var query = "SELECT * FROM CALLS_HISTROY;";
+    return db.query(query, function (err, rows) {
+        db.end();
+        if(err || !rows){
+            res.status(500).json({service_health: "DOWN"});
+        } else {
+            res.status(200).json({service_health: "UP", details: rows});
         }
     });
 });
